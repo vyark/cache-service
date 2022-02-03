@@ -1,9 +1,13 @@
 package shared;
 
-public class Item {
-    private String id;
+import lombok.ToString;
 
-    public Item(String id) {
-        this.id = id;
+@ToString
+public class Item {
+    private String key;
+
+    public Item(String key) {
+        this.key = key;
     }
+
 }

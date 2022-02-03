@@ -1,25 +1,27 @@
-import guava.GuavaCacheService;
+import lru.LRUCacheService;
 import shared.CacheService;
 import shared.Item;
-import simplejava.JavaCacheService;
+import lfu.LFUCacheService;
+
+import java.util.concurrent.ExecutionException;
 
 public class Main {
 
-    public static void main(String[] args) {
-        // guava cache service
-        CacheService guavaCacheService = new GuavaCacheService();
-        System.out.println("Guava Cache Service");
-        callCache(guavaCacheService);
+    public static void main(String[] args) throws ExecutionException {
+        // lru cache service
+        CacheService lruCacheService = new LRUCacheService();
+        System.out.println("LRU Cache Service");
+        callCache(lruCacheService);
 
         System.out.println("\n\n");
 
-        // java cache service
-        CacheService javaCacheService = new JavaCacheService();
-        System.out.println("Java Cache Service");
-        callCache(javaCacheService);
+        // lfu cache service
+        CacheService lfuCacheService = new LFUCacheService();
+        System.out.println("LFU Cache Service");
+        callCache(lfuCacheService);
     }
 
-    private static void callCache(CacheService cacheService) {
+    private static void callCache(CacheService cacheService) throws ExecutionException {
         cacheService.put("1", new Item("1"));
         cacheService.put("2", new Item("2"));
         cacheService.put("3", new Item("3"));
@@ -27,6 +29,7 @@ public class Main {
 
         cacheService.get("1");
 
+        cacheService.displayCache();
         cacheService.displayStatistics();
     }
 }
