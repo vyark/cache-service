@@ -49,7 +49,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
         if (!lists.containsKey(count + 1))
             lists.put(count + 1, new LinkedHashSet<>());
         lists.get(count + 1).add(values.get(key));
-        return (Optional<V>) values.get(key);
+        return Optional.of(values.get(key));
     }
 
     public boolean set(K key, V value) throws ExecutionException {

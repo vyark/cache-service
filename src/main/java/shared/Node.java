@@ -1,5 +1,8 @@
 package shared;
 
+import lombok.ToString;
+
+@ToString
 public class Node<T> implements LinkedListNode<T> {
     private T value;
     private DoublyLinkedList<T> list;
