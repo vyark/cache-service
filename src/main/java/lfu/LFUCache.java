@@ -1,5 +1,8 @@
 package lfu;
 
+import com.google.common.cache.RemovalCause;
+import com.google.common.cache.RemovalListener;
+import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.MapMaker;
 import shared.Cache;
 
@@ -27,13 +30,15 @@ public class LFUCache<K, V> implements Cache<K, V> {
     private long start;
     private long end;
     private List<Long> times = new ArrayList();
+    private RemovalListener removalListener;
 
-    public LFUCache(int capacity) {
-        cap = capacity;
-        values = new MapMaker().makeMap();
-        counts = new MapMaker().makeMap();
-        lists = new MapMaker().makeMap();
+    public LFUCache(int capacity, RemovalListener<Object, Object> removalListener) {
+        this.cap = capacity;
+        this.values = new MapMaker().makeMap();
+        this.counts = new MapMaker().makeMap();
+        this.lists = new MapMaker().makeMap();
         lists.put(1, new LinkedHashSet<>());
+        this.removalListener = removalListener;
     }
 
     @Override
@@ -73,6 +78,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
             counts.remove(evit);
             evictionNumber++;
             System.out.println("Value removed - " + evit);
+            removalListener.onRemoval(RemovalNotification.create(key, evit, RemovalCause.EXPIRED));
         }
         values.put(key, value);
         counts.put(key, 1);

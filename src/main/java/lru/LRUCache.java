@@ -1,5 +1,6 @@
 package lru;
 
+import com.google.common.cache.RemovalCause;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.MapMaker;
@@ -27,17 +28,13 @@ public class LRUCache<K, V> implements Cache<K, V> {
     private long start;
     private long end;
     private List<Long> times = new ArrayList();
+    private RemovalListener removalListener;
 
-    public LRUCache(int size) {
+    public LRUCache(int size, RemovalListener<Object, Object> removalListener) {
         this.size = size;
         this.linkedListNodeMap = new MapMaker().concurrencyLevel(4).initialCapacity(size).makeMap();
         this.doublyLinkedList = new DoublyLinkedList<>();
-        doublyLinkedList.removalListener(new RemovalListener() {
-            @Override
-            public void onRemoval(RemovalNotification removalNotification) {
-                System.out.println("Removal");
-            }
-        });
+        this.removalListener = removalListener;
     }
 
     @Override
@@ -122,6 +119,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
             }
             System.out.println("Value removed - " + linkedListNode);
             linkedListNodeMap.remove(linkedListNode.getElement().getKey());
+            removalListener.onRemoval(RemovalNotification.create(linkedListNode.getElement().getKey(), linkedListNode.getElement().getValue(), RemovalCause.REPLACED));
             return true;
         } finally {
             this.lock.writeLock().unlock();
