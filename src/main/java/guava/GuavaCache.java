@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class GuavaCache<K, V> implements Cache<K, V> {
+    private static final int MAX_CACHE_SIZE = 1;
+
     private LoadingCache<K, V> cache =
             CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS)
                     .maximumSize(MAX_CACHE_SIZE)
@@ -67,8 +69,9 @@ public class GuavaCache<K, V> implements Cache<K, V> {
         LinkedList<V> list = new LinkedList<V>(cache.asMap().values());
         Iterator<V> itr = list.descendingIterator();
 
-        while (itr.hasNext())
+        while (itr.hasNext()) {
             System.out.print(itr.next() + " ");
+        }
         System.out.println("\n");
     }
 

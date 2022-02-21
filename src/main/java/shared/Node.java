@@ -65,7 +65,7 @@ public class Node<T> implements LinkedListNode<T> {
     }
 
     @Override
-    public LinkedListNode<T> search(T value) {
-        return this.getElement() == value ? this : this.getNext().search(value);
+    public LinkedListNode<T> find(T value) {
+        return this.getElement().equals(value) ? this : this.getNext().find(value);
     }
 }

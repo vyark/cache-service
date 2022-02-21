@@ -69,7 +69,7 @@ public class DoublyLinkedList<T> {
     public LinkedListNode<T> search(T value) {
         this.lock.readLock().lock();
         try {
-            return head.search(value);
+            return head.find(value);
         } finally {
             this.lock.readLock().unlock();
         }
@@ -106,7 +106,7 @@ public class DoublyLinkedList<T> {
     public LinkedListNode<T> remove(T value) {
         this.lock.writeLock().lock();
         try {
-            LinkedListNode<T> linkedListNode = head.search(value);
+            LinkedListNode<T> linkedListNode = head.find(value);
             if (!linkedListNode.isEmpty()) {
                 if (linkedListNode == tail) {
                     tail = tail.getPrev();

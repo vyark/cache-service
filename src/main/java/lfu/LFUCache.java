@@ -37,14 +37,15 @@ public class LFUCache<K, V> implements Cache<K, V> {
         this.values = new MapMaker().makeMap();
         this.counts = new MapMaker().makeMap();
         this.lists = new MapMaker().makeMap();
-        lists.put(1, new LinkedHashSet<>());
+        this.lists.put(1, new LinkedHashSet<>());
         this.removalListener = removalListener;
     }
 
     @Override
     public Optional<V> get(K key) throws ExecutionException {
-        if (!values.containsKey(key))
+        if (!values.containsKey(key)) {
             return Optional.empty();
+        }
         int count = counts.get(key);
         counts.put(key, count + 1);
         lists.get(count).remove(key);
@@ -127,9 +128,10 @@ public class LFUCache<K, V> implements Cache<K, V> {
     }
 
     private Long getAverageTime() {
-        Long total = 0L;
-        for (Long l : times)
-            total += l;
-        return (total / times.size());
+        Long totalTime = 0L;
+        for (Long time : times) {
+            totalTime += time;
+        }
+        return (totalTime / times.size());
     }
 }

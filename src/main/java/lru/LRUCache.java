@@ -84,12 +84,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     @Override
     public int size() {
-        this.lock.readLock().lock();
-        try {
-            return doublyLinkedList.size();
-        } finally {
-            this.lock.readLock().unlock();
-        }
+        return doublyLinkedList.size();
     }
 
     @Override
@@ -99,13 +94,8 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     @Override
     public void clear() {
-        this.lock.writeLock().lock();
-        try {
-            linkedListNodeMap.clear();
-            doublyLinkedList.clear();
-        } finally {
-            this.lock.writeLock().unlock();
-        }
+        linkedListNodeMap.clear();
+        doublyLinkedList.clear();
     }
 
 
@@ -139,9 +129,9 @@ public class LRUCache<K, V> implements Cache<K, V> {
     }
 
     private Long getAverageTime() {
-        Long total = 0L;
-        for (Long l : times)
-            total += l;
-        return (total / times.size());
+        Long totalTime = 0L;
+        for (Long time : times)
+            totalTime += time;
+        return (totalTime / times.size());
     }
 }

@@ -18,8 +18,8 @@ public class DummyNode<T> implements LinkedListNode<T> {
     }
 
     @Override
-    public T getElement() throws NullPointerException {
-        throw new NullPointerException();
+    public T getElement() throws IllegalArgumentException {
+        throw new IllegalArgumentException();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class DummyNode<T> implements LinkedListNode<T> {
     }
 
     @Override
-    public LinkedListNode<T> search(T value) {
+    public LinkedListNode<T> find(T value) {
         return this;
     }
 }
