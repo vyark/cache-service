@@ -3,8 +3,6 @@ package guava;
 import com.google.common.cache.*;
 import shared.Cache;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -68,13 +66,6 @@ public class GuavaCache<K, V> implements Cache<K, V> {
     }
 
     public void displayCache() {
-        LinkedList<V> list = new LinkedList<V>(cache.asMap().values());
-        Iterator<V> itr = list.descendingIterator();
-
-        while (itr.hasNext()) {
-            System.out.print(itr.next() + " ");
-        }
-        System.out.println("\n");
+        cache.asMap().values().stream().forEach(value -> System.out.print(value));
     }
-
 }

@@ -11,7 +11,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 /**
@@ -24,8 +23,8 @@ public class LFUCache<K, V> implements Cache<K, V> {
     private ConcurrentMap<K, Integer> counts;//K and counters
     private ConcurrentMap<Integer, LinkedHashSet<V>> lists;//Counter and item list
     private ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
-    private int cap;
-    private int min = -1;
+    private int capacity;
+    private int minimum = -1;
     private int evictionNumber;
     private long start;
     private long end;
@@ -33,7 +32,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
     private RemovalListener removalListener;
 
     public LFUCache(int capacity, RemovalListener<Object, Object> removalListener) {
-        this.cap = capacity;
+        this.capacity = capacity;
         this.values = new MapMaker().makeMap();
         this.counts = new MapMaker().makeMap();
         this.lists = new MapMaker().makeMap();
@@ -42,7 +41,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
     }
 
     @Override
-    public Optional<V> get(K key) throws ExecutionException {
+    public Optional<V> get(K key) {
         if (!values.containsKey(key)) {
             return Optional.empty();
         }
@@ -50,17 +49,19 @@ public class LFUCache<K, V> implements Cache<K, V> {
         counts.put(key, count + 1);
         lists.get(count).remove(key);
 
-        if (count == min && lists.get(count).size() == 0)
-            min++;
-        if (!lists.containsKey(count + 1))
+        if (count == minimum && lists.get(count).size() == 0) {
+            minimum++;
+        }
+        if (!lists.containsKey(count + 1)) {
             lists.put(count + 1, new LinkedHashSet<>());
+        }
         lists.get(count + 1).add(values.get(key));
         return Optional.of(values.get(key));
     }
 
-    public boolean set(K key, V value) throws ExecutionException {
+    private boolean set(K key, V value) {
         start = System.currentTimeMillis();
-        if (cap <= 0) {
+        if (capacity <= 0) {
             end = System.currentTimeMillis();
             times.add(end - start);
             return false;
@@ -72,9 +73,9 @@ public class LFUCache<K, V> implements Cache<K, V> {
             times.add(end - start);
             return true;
         }
-        if (values.size() >= cap) {
-            V evit = lists.get(min).iterator().next();
-            lists.get(min).remove(evit);
+        if (values.size() >= capacity) {
+            V evit = lists.get(minimum).iterator().next();
+            lists.get(minimum).remove(evit);
             values.remove(evit);
             counts.remove(evit);
             evictionNumber++;
@@ -83,7 +84,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
         }
         values.put(key, value);
         counts.put(key, 1);
-        min = 1;
+        minimum = 1;
         lists.get(1).add(value);
         end = System.currentTimeMillis();
         times.add(end - start);
@@ -92,12 +93,7 @@ public class LFUCache<K, V> implements Cache<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        try {
-            return set(key, value);
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        return false;
+        return set(key, value);
     }
 
     @Override

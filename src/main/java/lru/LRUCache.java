@@ -75,7 +75,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
             LinkedListNode<CacheElement<K, V>> linkedListNode = this.linkedListNodeMap.get(key);
             if (linkedListNode != null && !linkedListNode.isEmpty()) {
                 linkedListNodeMap.put(key, this.doublyLinkedList.moveToFront(linkedListNode));
-                return Optional.of(linkedListNode.getElement().getValue());
+                return Optional.of(linkedListNode.getElement().value());
             }
             return Optional.empty();
         } finally {
@@ -109,8 +109,8 @@ public class LRUCache<K, V> implements Cache<K, V> {
                 return false;
             }
             System.out.println("Value removed - " + linkedListNode);
-            linkedListNodeMap.remove(linkedListNode.getElement().getKey());
-            removalListener.onRemoval(RemovalNotification.create(linkedListNode.getElement().getKey(), linkedListNode.getElement().getValue(), RemovalCause.REPLACED));
+            linkedListNodeMap.remove(linkedListNode.getElement().key());
+            removalListener.onRemoval(RemovalNotification.create(linkedListNode.getElement().key(), linkedListNode.getElement().value(), RemovalCause.REPLACED));
             return true;
         } finally {
             this.lock.writeLock().unlock();

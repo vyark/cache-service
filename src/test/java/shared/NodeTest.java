@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class NodeTest {
-    private DoublyLinkedList<CacheElement> list = new DoublyLinkedList<CacheElement>();
+    private DoublyLinkedList<CacheElement> list = new DoublyLinkedList<>();
     private CacheElement cacheElement = new CacheElement("key", "value");
     private LinkedListNode next = new DefaultNode<>(list);
     private Node<CacheElement> node = new Node<CacheElement>(cacheElement, next, list);
