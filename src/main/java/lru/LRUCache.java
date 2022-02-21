@@ -84,12 +84,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     @Override
     public int size() {
-        this.lock.readLock().lock();
-        try {
-            return doublyLinkedList.size();
-        } finally {
-            this.lock.readLock().unlock();
-        }
+        return doublyLinkedList.size();
     }
 
     @Override
