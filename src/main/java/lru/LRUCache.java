@@ -20,6 +20,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * (more than other elements in the cache).
  */
 public class LRUCache<K, V> implements Cache<K, V> {
+    private static final int CONCURRENCY_LEVEL = 4;
     private int size;
     private ConcurrentMap<K, LinkedListNode<CacheElement<K, V>>> linkedListNodeMap;
     private DoublyLinkedList<CacheElement<K, V>> doublyLinkedList;
@@ -32,7 +33,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     public LRUCache(int size, RemovalListener<Object, Object> removalListener) {
         this.size = size;
-        this.linkedListNodeMap = new MapMaker().concurrencyLevel(4).initialCapacity(size).makeMap();
+        this.linkedListNodeMap = new MapMaker().concurrencyLevel(CONCURRENCY_LEVEL).initialCapacity(size).makeMap();
         this.doublyLinkedList = new DoublyLinkedList<>();
         this.removalListener = removalListener;
     }

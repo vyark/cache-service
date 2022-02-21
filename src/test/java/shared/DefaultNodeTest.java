@@ -25,32 +25,32 @@ public class DefaultNodeTest {
     }
 
     @Test
-    public void getListReference(){
+    public void getListReference() {
         assertEquals(list, defaultNode.getListReference());
     }
 
     @Test
-    public void testSetPrev(){
+    public void testSetPrev() {
         assertEquals(defaultNode, defaultNode.setPrev(defaultNode));
     }
 
     @Test
-    public void testSetNext(){
+    public void testSetNext() {
         assertEquals(defaultNode, defaultNode.setNext(defaultNode));
     }
 
     @Test
-    public void testGetPrev(){
+    public void testGetPrev() {
         assertEquals(defaultNode, defaultNode.getPrev());
     }
 
     @Test
-    public void testGetNext(){
+    public void testGetNext() {
         assertEquals(defaultNode, defaultNode.getNext());
     }
 
     @Test
-    public void testFind(){
+    public void testFind() {
         assertEquals(defaultNode, defaultNode.find(cacheElement));
     }
 }
