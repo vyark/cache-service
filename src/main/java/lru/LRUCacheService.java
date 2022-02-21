@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public class LRUCacheService implements CacheService {
 
-    private static final int MAX_CACHE_SIZE = 0;
+    private static final int MAX_CACHE_SIZE = 10000;
 
-    LRUCache<String, Item> cache = new LRUCache<>(MAX_CACHE_SIZE, new RemovalListener<>() {
+    private LRUCache<String, Item> cache = new LRUCache<>(MAX_CACHE_SIZE, new RemovalListener<>() {
         @Override
         public void onRemoval(RemovalNotification<Object, Object> removalNotification) {
             System.out.println("Removal");

@@ -1,9 +1,9 @@
 package shared;
 
-public class DummyNode<T> implements LinkedListNode<T> {
+public class DefaultNode<T> implements LinkedListNode<T> {
     private DoublyLinkedList<T> list;
 
-    public DummyNode(DoublyLinkedList<T> list) {
+    public DefaultNode(DoublyLinkedList<T> list) {
         this.list = list;
     }
 
@@ -24,7 +24,6 @@ public class DummyNode<T> implements LinkedListNode<T> {
 
     @Override
     public void detach() {
-        return;
     }
 
     @Override

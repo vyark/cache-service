@@ -10,13 +10,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class GuavaCache<K, V> implements Cache<K, V> {
-    private static final int MAX_CACHE_SIZE = 1;
+    private static final int MAX_CACHE_SIZE = 10000;
+    private static final int CONCURRENCY_LEVEL = 1;
 
     private LoadingCache<K, V> cache =
             CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.SECONDS)
                     .maximumSize(MAX_CACHE_SIZE)
                     .recordStats()
-                    .concurrencyLevel(1)
+                    .concurrencyLevel(CONCURRENCY_LEVEL)
                     .removalListener(new RemovalListener<K, V>() {
                         @Override
                         public void onRemoval(RemovalNotification<K, V> notification) {
@@ -42,7 +43,8 @@ public class GuavaCache<K, V> implements Cache<K, V> {
 
     @Override
     public boolean put(K key, V value) {
-        return put(key, value);
+        cache.put(key, value);
+        return true;
     }
 
     @Override
@@ -62,7 +64,7 @@ public class GuavaCache<K, V> implements Cache<K, V> {
 
     @Override
     public void clear() {
-        cache.cleanUp();
+        cache.invalidateAll();
     }
 
     public void displayCache() {

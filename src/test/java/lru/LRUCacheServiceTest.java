@@ -1,12 +1,13 @@
 package lru;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import shared.CacheService;
 import shared.Item;
 
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LRUCacheServiceTest {
     private static final String KEY = "1";
@@ -15,17 +16,26 @@ public class LRUCacheServiceTest {
     private CacheService cacheService = new LRUCacheService();
 
     @Test
-    public void get() throws ExecutionException {
+    public void testGetFromCache() throws ExecutionException {
         cacheService.put(KEY, ITEM);
+        cacheService.put("2", new Item("2"));
+        cacheService.put("3", new Item("3"));
+        cacheService.put("4", new Item("4"));
 
-        assertEquals(cacheService.get(KEY), ITEM);
+        cacheService.displayCache();
+
+        assertEquals(Optional.of(ITEM), cacheService.get(KEY));
+        assertEquals(4, cacheService.getCache().size());
+
+        cacheService.getCache().clear();
+
+        assertEquals(0, cacheService.getCache().size());
     }
 
     @Test
-    public void put() throws ExecutionException {
+    public void testPutIntoCache() throws ExecutionException {
         cacheService.put(KEY, ITEM);
 
-        assertEquals(cacheService.get(KEY), ITEM);
+        assertEquals(Optional.of(ITEM), cacheService.get(KEY));
     }
-
 }

@@ -11,9 +11,9 @@ import java.util.concurrent.ExecutionException;
 
 public class LFUCacheService implements CacheService {
 
-    private static final int MAX_CACHE_SIZE = 0;
+    private static final int MAX_CACHE_SIZE = 10000;
 
-    LFUCache<String, Item> cache = new LFUCache<>(MAX_CACHE_SIZE, new RemovalListener<>() {
+    private LFUCache<String, Item> cache = new LFUCache<>(MAX_CACHE_SIZE, new RemovalListener<>() {
         @Override
         public void onRemoval(RemovalNotification<Object, Object> removalNotification) {
             System.out.println("Removal");

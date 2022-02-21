@@ -2,7 +2,6 @@ package shared;
 
 import com.google.common.base.Preconditions;
 import com.google.common.cache.RemovalListener;
-import lombok.ToString;
 
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DoublyLinkedList<T> {
 
-    private DummyNode<T> dummyNode;
+    private DefaultNode<T> defaultNode;
     private LinkedListNode<T> head;
     private LinkedListNode<T> tail;
     private AtomicInteger size;
@@ -18,43 +17,28 @@ public class DoublyLinkedList<T> {
     private RemovalListener removalListener;
 
     public DoublyLinkedList() {
-        this.dummyNode = new DummyNode<T>(this);
+        this.defaultNode = new DefaultNode<T>(this);
         clear();
     }
 
     public DoublyLinkedList<T> removalListener(RemovalListener listener) {
         Preconditions.checkState(this.removalListener == null);
-        this.removalListener = (RemovalListener)Preconditions.checkNotNull(listener);
+        this.removalListener = (RemovalListener) Preconditions.checkNotNull(listener);
         return this;
     }
 
     public void clear() {
-        this.lock.writeLock().lock();
-        try {
-            head = dummyNode;
-            tail = dummyNode;
-            size = new AtomicInteger(0);
-        } finally {
-            this.lock.writeLock().unlock();
-        }
+        head = defaultNode;
+        tail = defaultNode;
+        size = new AtomicInteger(0);
     }
 
     public int size() {
-        this.lock.readLock().lock();
-        try {
-            return size.get();
-        } finally {
-            this.lock.readLock().unlock();
-        }
+        return size.get();
     }
 
     public boolean isEmpty() {
-        this.lock.readLock().lock();
-        try {
-            return head.isEmpty();
-        } finally {
-            this.lock.readLock().unlock();
-        }
+        return head.isEmpty();
     }
 
     public boolean contains(T value) {
@@ -128,7 +112,7 @@ public class DoublyLinkedList<T> {
         try {
             LinkedListNode<T> oldTail = tail;
             if (oldTail == head) {
-                tail = head = dummyNode;
+                tail = head = defaultNode;
             } else {
                 tail = tail.getPrev();
                 oldTail.detach();
@@ -143,14 +127,14 @@ public class DoublyLinkedList<T> {
     }
 
     public LinkedListNode<T> moveToFront(LinkedListNode<T> node) {
-        return node.isEmpty() ? dummyNode : updateAndMoveToFront(node, node.getElement());
+        return node.isEmpty() ? defaultNode : updateAndMoveToFront(node, node.getElement());
     }
 
     public LinkedListNode<T> updateAndMoveToFront(LinkedListNode<T> node, T newValue) {
         this.lock.writeLock().lock();
         try {
             if (node.isEmpty() || (this != (node.getListReference()))) {
-                return dummyNode;
+                return defaultNode;
             }
             detach(node);
             add(newValue);

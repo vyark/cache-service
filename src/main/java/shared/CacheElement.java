@@ -1,5 +1,8 @@
 package shared;
 
+import lombok.ToString;
+
+@ToString
 public class CacheElement<K,V> {
     private K key;
     private V value;
