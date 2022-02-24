@@ -9,7 +9,8 @@ import shared.Item;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class LFUCacheTest {
     private static final Item ITEM = new Item("value");
