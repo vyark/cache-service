@@ -1,6 +1,7 @@
 package lru;
 
 import org.junit.jupiter.api.Test;
+import shared.CacheService;
 import shared.Item;
 
 import java.util.Optional;
