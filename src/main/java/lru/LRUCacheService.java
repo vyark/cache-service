@@ -7,11 +7,11 @@ import shared.Item;
 
 import java.util.Optional;
 
-import static shared.Cache.MAX_CACHE_SIZE;
-
 public class LRUCacheService implements CacheService {
 
-    LRUCache<String, Item> cache = new LRUCache<>(MAX_CACHE_SIZE, new RemovalListener<>() {
+    private static final int MAX_CACHE_SIZE = 10000;
+
+    private LRUCache<String, Item> cache = new LRUCache<>(MAX_CACHE_SIZE, new RemovalListener<>() {
         @Override
         public void onRemoval(RemovalNotification<Object, Object> removalNotification) {
             System.out.println("Removal");
@@ -36,5 +36,10 @@ public class LRUCacheService implements CacheService {
     @Override
     public void displayCache() {
         cache.displayCache();
+    }
+
+    @Override
+    public LRUCache<String, Item> getCache() {
+        return cache;
     }
 }

@@ -3,7 +3,7 @@ package shared;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
-public interface CacheService {
+public interface CacheService<K, V> {
 
     Optional<Item> get(String key) throws ExecutionException;
 
@@ -12,4 +12,6 @@ public interface CacheService {
     void displayStatistics();
 
     void displayCache();
+
+    Cache<K, V> getCache();
 }

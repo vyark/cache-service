@@ -1,9 +1,9 @@
 package shared;
 
-public class DummyNode<T> implements LinkedListNode<T> {
+public class DefaultNode<T> implements LinkedListNode<T> {
     private DoublyLinkedList<T> list;
 
-    public DummyNode(DoublyLinkedList<T> list) {
+    public DefaultNode(DoublyLinkedList<T> list) {
         this.list = list;
     }
 
@@ -18,13 +18,12 @@ public class DummyNode<T> implements LinkedListNode<T> {
     }
 
     @Override
-    public T getElement() throws NullPointerException {
-        throw new NullPointerException();
+    public T getElement() throws IllegalArgumentException {
+        throw new IllegalArgumentException();
     }
 
     @Override
     public void detach() {
-        return;
     }
 
     @Override
@@ -53,7 +52,7 @@ public class DummyNode<T> implements LinkedListNode<T> {
     }
 
     @Override
-    public LinkedListNode<T> search(T value) {
+    public LinkedListNode<T> find(T value) {
         return this;
     }
 }

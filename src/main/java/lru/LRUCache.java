@@ -20,6 +20,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * (more than other elements in the cache).
  */
 public class LRUCache<K, V> implements Cache<K, V> {
+    private static final int CONCURRENCY_LEVEL = 4;
     private int size;
     private ConcurrentMap<K, LinkedListNode<CacheElement<K, V>>> linkedListNodeMap;
     private DoublyLinkedList<CacheElement<K, V>> doublyLinkedList;
@@ -32,7 +33,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     public LRUCache(int size, RemovalListener<Object, Object> removalListener) {
         this.size = size;
-        this.linkedListNodeMap = new MapMaker().concurrencyLevel(4).initialCapacity(size).makeMap();
+        this.linkedListNodeMap = new MapMaker().concurrencyLevel(CONCURRENCY_LEVEL).initialCapacity(size).makeMap();
         this.doublyLinkedList = new DoublyLinkedList<>();
         this.removalListener = removalListener;
     }
@@ -74,7 +75,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
             LinkedListNode<CacheElement<K, V>> linkedListNode = this.linkedListNodeMap.get(key);
             if (linkedListNode != null && !linkedListNode.isEmpty()) {
                 linkedListNodeMap.put(key, this.doublyLinkedList.moveToFront(linkedListNode));
-                return Optional.of(linkedListNode.getElement().getValue());
+                return Optional.of(linkedListNode.getElement().value());
             }
             return Optional.empty();
         } finally {
@@ -84,12 +85,7 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     @Override
     public int size() {
-        this.lock.readLock().lock();
-        try {
-            return doublyLinkedList.size();
-        } finally {
-            this.lock.readLock().unlock();
-        }
+        return doublyLinkedList.size();
     }
 
     @Override
@@ -99,13 +95,8 @@ public class LRUCache<K, V> implements Cache<K, V> {
 
     @Override
     public void clear() {
-        this.lock.writeLock().lock();
-        try {
-            linkedListNodeMap.clear();
-            doublyLinkedList.clear();
-        } finally {
-            this.lock.writeLock().unlock();
-        }
+        linkedListNodeMap.clear();
+        doublyLinkedList.clear();
     }
 
 
@@ -118,8 +109,8 @@ public class LRUCache<K, V> implements Cache<K, V> {
                 return false;
             }
             System.out.println("Value removed - " + linkedListNode);
-            linkedListNodeMap.remove(linkedListNode.getElement().getKey());
-            removalListener.onRemoval(RemovalNotification.create(linkedListNode.getElement().getKey(), linkedListNode.getElement().getValue(), RemovalCause.REPLACED));
+            linkedListNodeMap.remove(linkedListNode.getElement().key());
+            removalListener.onRemoval(RemovalNotification.create(linkedListNode.getElement().key(), linkedListNode.getElement().value(), RemovalCause.REPLACED));
             return true;
         } finally {
             this.lock.writeLock().unlock();
@@ -139,9 +130,9 @@ public class LRUCache<K, V> implements Cache<K, V> {
     }
 
     private Long getAverageTime() {
-        Long total = 0L;
-        for (Long l : times)
-            total += l;
-        return (total / times.size());
+        Long totalTime = 0L;
+        for (Long time : times)
+            totalTime += time;
+        return (totalTime / times.size());
     }
 }

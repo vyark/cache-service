@@ -19,5 +19,5 @@ public interface LinkedListNode<V> {
 
     LinkedListNode<V> getNext();
 
-    LinkedListNode<V> search(V value);
+    LinkedListNode<V> find(V value);
 }
